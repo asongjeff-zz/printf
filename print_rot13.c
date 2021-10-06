@@ -2,26 +2,25 @@
 #include <stdlib.h>
 
 /**
- * print_R - A function that prints a string in rot13 format
- * @R: string to print
- * Return: number of printed characters
+ * print_rot13 - encodes a string using rot13 encryption
+ * @s: string to be encoded
+ *
+ * Return: number of chars printed
  */
-int print_R(va_list R)
+int print_rot13(char *s)
 {
-	char *str;
 	unsigned int i = 0, j = 0;
 	int counter = 0;
 	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	char out[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
 
-	str = va_arg(R, char *);
-	if (str == NULL)
-		str = "(ahyy)";
-	for (; str[i]; i++)
+	if (s == NULL)
+		s = "(ahyy)";
+	for (; s[i]; i++)
 	{
 		for (j = 0; in[j]; j++)
 		{
-			if (in[j] == str[i])
+			if (in[j] == s[i])
 			{
 				_putchar(out[j]);
 				counter++;
@@ -30,7 +29,7 @@ int print_R(va_list R)
 		}
 		if (!in[j])
 		{
-			_putchar(str[i]);
+			_putchar(s[i]);
 			counter++;
 		}
 	}

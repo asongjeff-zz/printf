@@ -1,34 +1,32 @@
 #include "main.h"
-#include <stdlib.h>
 
 /**
- * print_S - A function that prints a string and nonprintable
- * character ascii values
- * @S: string to print
- * Return: number of printed characters
+ * print_S - prints a string with custom formatting
+ *
+ * @str: string to be formatted
+ * Return: number of chars printed
  */
-int print_S(va_list S)
-{
-	unsigned int i = 0;
-	int counter = 0;
-	char *str = va_arg(S, char *);
 
-	if (str == NULL)
-		str = "(null)";
-	for (; str[i]; i++)
+int print_S(char *str)
+{
+	int i = 0, chars_printed = 0;
+	char c;
+
+	while (str[i])
 	{
-		if (str[i] < 32 || str[i] >= 127)
+		c = str[i];
+		if ((c > 0 && c  < 32) || c >= 127)
 		{
-			_putchar('\\');
-			_putchar('x');
-			counter += 2;
-			counter += print_x(S);
+			chars_printed += _putchar('\\');
+			chars_printed += _putchar('x');
+			chars_printed += _putchar('0');
+			chars_printed += print_odh('X', (unsigned int)c);
 		}
 		else
 		{
-			_putchar(str[i]);
-			counter++;
+			chars_printed += _putchar(c);
 		}
+		i++;
 	}
-	return (counter);
+	return (chars_printed);
 }

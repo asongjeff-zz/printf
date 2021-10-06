@@ -1,84 +1,54 @@
 #include "main.h"
-#include <stdarg.h>
 
 /**
- * check_format - checks if there is a valid format specifier
- * @format: possible valid format specifier
- * Return: pointer to valid function or NULL
- */
-int (*check_format(const char *format))(va_list)
-{
-	int i = 0;
-	print_t p[] = {
-		{"c", print_c},
-		{"s", print_s},
-		{"d", print_d},
-		{"i", print_i},
-		{"b", print_b},
-		{"u", print_u},
-		{"o", print_o},
-		{"x", print_x},
-		{"X", print_X},
-		{"p", print_p},
-		{"S", print_S},
-		{"r", print_r},
-		{"R", print_R},
-		{NULL, NULL}
-	};
-
-	for (; p[i].t != NULL; i++)
-	{
-		if (*(p[i].t) == *format)
-			break;
-	}
-	return (p[i].f);
-}
-
-/**
- * _printf - function for format printing
- * @format: list of arguments to printing
- * Return: Number of characters to printing
+ * _printf - Function that prints formatted output.
+ *
+ * @format: a string composed of zero or more characters to print or use as
+ * directives that handle subsequent arguments and special characters.
+ *
+ * Description: This function can take a variable number and type of arguments
+ * that should be printed to standard output.
+ *
+ * Return: int
  */
 int _printf(const char *format, ...)
 {
-	va_list ap;
-	int (*f)(va_list);
-	unsigned int i = 0, counter = 0;
+	va_list args;
+	int i = 0, chars_printed = 0;
 
-	if (format == NULL)
-		return (-1);
-
-	va_start(ap, format);
+	va_start(args, format);
 	while (format && format[i])
 	{
 		if (format[i] != '%')
 		{
-			_putchar(format[i]);
-			counter++;
-			i++;
-			continue;
+			chars_printed += _putchar(format[i]);
 		}
-		else
+		else if (format[i + 1])
 		{
-			if (format[i + 1] == '%')
-			{
-				_putchar('%');
-				counter++;
-				i += 2;
-				continue;
-			}
+			i++;
+			if (format[i] == 'c' || format[i] == 's')
+				chars_printed += format[i] == 'c' ? _putchar(va_arg(args, int)) :
+				print_string(va_arg(args, char *));
+			else if (format[i] == 'd' || format[i] == 'i')
+				chars_printed += print_num(va_arg(args, int));
+			else if (format[i] == 'b')
+				chars_printed += print_binary((unsigned int)va_arg(args, int));
+			else if (format[i] == 'r')
+				chars_printed += print_reverse(va_arg(args, char *));
+			else if (format[i] == 'R')
+				chars_printed += print_rot13(va_arg(args, char *));
+			else if (format[i] == 'o' || format[i] == 'u' ||
+			format[i] == 'x' || format[i] == 'X')
+				chars_printed += print_odh(format[i], (unsigned int)va_arg(args, int));
+			else if (format[i] == 'S')
+				chars_printed += print_S(va_arg(args, char *));
+			else if (format[i] == 'p')
+				chars_printed += print_pointer(va_arg(args, void *));
 			else
-			{
-				f = check_format(&format[i + 1]);
-				if (f == NULL)
-					return (-1);
-				i += 2;
-				counter += f(ap);
-				continue;
-			}
+				chars_printed += print_unk(format[i]);
 		}
 		i++;
 	}
-	va_end(ap);
-	return (counter);
+	va_end(args);
+	return (chars_printed);
 }
