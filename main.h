@@ -1,5 +1,5 @@
-#ifndef _HOLBERTON_H_
-#define _HOLBERTON_H_
+#ifndef MAIN_H
+#define MAIN_H
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -40,4 +40,4 @@ int print_less(va_list less);
 int print_space(va_list space);
 int print_sharp(va_list sharp);
 
-#endif  /* _HOLBERTON_H */
+#endif  /* MAIN_H */
